@@ -22,7 +22,7 @@ import { publicIp, publicIpv4, publicIpv6 } from 'public-ip';
 
 
 // For mongodb
-const  mongoUrl= 'mongodb://3.81.12.106:27017/'// Replace with mongodb server IP
+const  mongoUrl= 'mongodb://mongodb-service:27017/';// Replace with mongodb server IP
 const client = new MongoClient(mongoUrl); 
 
 const db = client.db('mydatabase'); // Name of your database
@@ -112,6 +112,14 @@ app.get('/hostinfo', async (req, res) => {
         publicIpAddress
     };
     res.json(hostinfo);
+});
+
+// Health check route
+app.get('/health', (req, res) => {
+    res.status(200).json({
+        status: 'healthy',
+        message: 'Server is running smoothly'
+    });
 });
 
 app.listen(PORT, () => {
