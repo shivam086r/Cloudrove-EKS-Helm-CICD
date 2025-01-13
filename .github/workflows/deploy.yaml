@@ -32,8 +32,8 @@ jobs:
     # Install Trivy for image scanning
     - name: Install Trivy
       run: |
-        curl -sfL https://github.com/aquasecurity/trivy/releases/download/v0.36.0/trivy_0.36.0_Linux-x86_64.deb -o trivy.deb
-        sudo dpkg -i trivy.deb
+        wget https://github.com/aquasecurity/trivy/releases/download/v0.18.3/trivy_0.18.3_Linux-64bit.deb
+        sudo dpkg -i trivy_0.18.3_Linux-64bit.deb
 
     # Scan Docker image with Trivy for vulnerabilities
     - name: Scan Docker image with Trivy
