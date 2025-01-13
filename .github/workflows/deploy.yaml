@@ -104,6 +104,10 @@ jobs:
       run: |
         kubectl get pods --namespace app-namespace
 
+     # Install mailx to send email notifications
+    - name: Install mailx
+      run: sudo apt-get install -y mailutils  
+
      # Send Email Notification - Deploy Started
     - name: Send Email Notification - Deploy Started
       run: |
