@@ -1,0 +1,17 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: node-cluster
+  region: us-east-1
+
+nodeGroups:
+  - name: demo-nodes
+    instanceType: t2.medium
+    desiredCapacity: 1
+    minSize: 1
+    maxSize: 3
+
+vpc:
+  nat:
+    gateway: Single
