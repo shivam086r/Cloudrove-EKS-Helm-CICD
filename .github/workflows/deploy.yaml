@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
     # Checkout the code
     - name: Checkout code
@@ -45,10 +45,27 @@ jobs:
     - name: Push Docker image to Docker Hub
       run: |
         docker push ${{ secrets.DOCKER_REPOSITORY }}:${{ github.sha }}
-  
+    
+    # Send Email Notification - Build Started
+    - name: Send Email Notification - Build Started
+      run: |
+        echo "Build started for commit ${{ github.sha }}" | mail -s "Build Started" ${{ secrets.EMAIL_TO }} -r ${{ secrets.EMAIL_FROM }}
+    
+    # Send Email Notification - Build Successful
+    - name: Send Email Notification - Build Successful
+      if: success()
+      run: |
+        echo "Build succeeded for commit ${{ github.sha }}" | mail -s "Build Succeeded" ${{ secrets.EMAIL_TO }} -r ${{ secrets.EMAIL_FROM }}
+    
+    # Send Email Notification - Build Failed
+    - name: Send Email Notification - Build Failed
+      if: failure()
+      run: |
+        echo "Build failed for commit ${{ github.sha }}" | mail -s "Build Failed" ${{ secrets.EMAIL_TO }} -r ${{ secrets.EMAIL_FROM }}
+
   deploy:
     runs-on: ubuntu-latest
-    needs: build 
+    needs: build
 
     steps:
     # Checkout code again in the deploy job
@@ -82,3 +99,20 @@ jobs:
     - name: Check Kubernetes deployment status
       run: |
         kubectl get pods --namespace app-namespace
+
+    # Send Email Notification - Deploy Started
+    - name: Send Email Notification - Deploy Started
+      run: |
+        echo "Deployment started for commit ${{ github.sha }}" | mail -s "Deployment Started" ${{ secrets.EMAIL_TO }} -r ${{ secrets.EMAIL_FROM }}
+    
+    # Send Email Notification - Deploy Successful
+    - name: Send Email Notification - Deploy Successful
+      if: success()
+      run: |
+        echo "Deployment succeeded for commit ${{ github.sha }}" | mail -s "Deployment Succeeded" ${{ secrets.EMAIL_TO }} -r ${{ secrets.EMAIL_FROM }}
+    
+    # Send Email Notification - Deploy Failed
+    - name: Send Email Notification - Deploy Failed
+      if: failure()
+      run: |
+        echo "Deployment failed for commit ${{ github.sha }}" | mail -s "Deployment Failed" ${{ secrets.EMAIL_TO }} -r ${{ secrets.EMAIL_FROM }}
