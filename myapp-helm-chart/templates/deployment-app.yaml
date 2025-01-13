@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-app
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: nodejs-app
+spec:
+  replicas: {{ .Values.app.replicas }}
+  selector:
+    matchLabels:
+      app: nodejs-app
+  template:
+    metadata:
+      labels:
+        app: nodejs-app
+    spec:
+      containers:
+      - name: nodejs-app
+        image: {{ .Values.app.image }}
+        ports:
+        - containerPort: 5000
+        env:
+        - name: MONGO_URL
+          value: {{ .Values.app.mongoUrl }}

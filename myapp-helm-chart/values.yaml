@@ -1,0 +1,10 @@
+namespace: app-namespace
+
+mongodb:
+  image: mongo:6
+  replicas: 1
+
+app:
+  image: shivam086r/assignment-clouddrove:379559e43c83b86401a17388ae0a6e3b905fb100
+  replicas: 2
+  mongoUrl: "mongodb://mongodb-service:27017/mydatabase"
