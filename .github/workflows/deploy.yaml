@@ -29,6 +29,18 @@ jobs:
       run: |
         docker build -t ${{ secrets.DOCKER_REPOSITORY }} .  
 
+    # Install Trivy for image scanning
+    - name: Install Trivy
+      run: |
+        curl -sfL https://github.com/aquasecurity/trivy/releases/download/v0.36.0/trivy_0.36.0_Linux-x86_64.deb -o trivy.deb
+        sudo dpkg -i trivy.deb
+
+    # Scan Docker image with Trivy for vulnerabilities
+    - name: Scan Docker image with Trivy
+      run: |
+        trivy image --exit-code 1 --no-progress ${{ secrets.DOCKER_REPOSITORY }}:${{ github.sha }}
+      continue-on-error: false
+
     # Push Docker image to Docker Hub
     - name: Push Docker image to Docker Hub
       run: |
