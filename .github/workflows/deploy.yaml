@@ -27,7 +27,7 @@ jobs:
     # Build Docker image
     - name: Build Docker image
       run: |
-        docker build -t ${{ secrets.DOCKER_REPOSITORY }} .  
+        docker build -t ${{ secrets.DOCKER_REPOSITORY }}:${{ github.sha }} .
 
     # Install Trivy for image scanning
     - name: Install Trivy
@@ -44,9 +44,8 @@ jobs:
     # Push Docker image to Docker Hub
     - name: Push Docker image to Docker Hub
       run: |
-        docker tag ${{ secrets.DOCKER_REPOSITORY }}:latest ${{ secrets.DOCKER_REPOSITORY }}:${{ github.sha }}
-        docker push ${{ secrets.DOCKER_REPOSITORY }}:${{ github.sha }}  
-
+        docker push ${{ secrets.DOCKER_REPOSITORY }}:${{ github.sha }}
+  
   deploy:
     runs-on: ubuntu-latest
     needs: build 
